@@ -1,102 +1,142 @@
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
-    id: 1,
     title: "Mega Electronics Sale",
     subtitle: "Up to 60% Off on TVs & Appliances",
     cta: "Shop Now",
-    bgGradient: "from-blue-900 via-blue-800 to-blue-900",
-    image: "📺",
+    gradient: "from-yellow-400 via-yellow-300 to-yellow-200",
+    dark: false,
   },
   {
-    id: 2,
     title: "Summer Cooling Fest",
-    subtitle: "ACs & Coolers starting ₹15,999",
+    subtitle: "ACs starting from ₹15,999",
     cta: "Explore Deals",
-    bgGradient: "from-cyan-800 via-teal-700 to-cyan-800",
-    image: "❄️",
+    gradient: "from-gray-900 via-gray-800 to-black",
+    dark: true,
   },
   {
-    id: 3,
     title: "Kitchen Essentials",
-    subtitle: "Flat 40% Off on Kitchen Appliances",
+    subtitle: "Flat 40% Off on Appliances",
     cta: "View Collection",
-    bgGradient: "from-orange-800 via-red-700 to-orange-800",
-    image: "🍳",
+    gradient: "from-amber-400 via-yellow-300 to-yellow-200",
+    dark: false,
   },
 ];
 
 export function HeroSlider() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    const timer = setInterval(
+      () => setIndex((p) => (p + 1) % slides.length),
+      4200
+    );
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const slide = slides[index];
 
   return (
-    <div className="relative w-full h-[200px] sm:h-[280px] md:h-[350px] lg:h-[400px] overflow-hidden">
-      {/* Slides */}
-      {slides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-700 bg-gradient-to-r ${slide.bgGradient} ${
-            index === currentSlide ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <div className="container h-full flex items-center">
-            <div className="max-w-xl text-primary-foreground animate-fade-in">
-              <div className="text-6xl mb-4">{slide.image}</div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2">
-                {slide.title}
-              </h1>
-              <p className="text-lg sm:text-xl md:text-2xl text-primary-foreground/90 mb-4">
-                {slide.subtitle}
-              </p>
-              <button className="bg-accent hover:bg-krishna-orange-hover text-primary font-bold py-2 px-6 rounded-full transition-colors text-sm sm:text-base">
-                {slide.cta}
-              </button>
-            </div>
-          </div>
-
-          {/* Gradient Fade at Bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-        </div>
-      ))}
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-card/80 hover:bg-card p-2 rounded-full shadow-lg transition-colors"
-      >
-        <ChevronLeft className="w-6 h-6 text-foreground" />
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-card/80 hover:bg-card p-2 rounded-full shadow-lg transition-colors"
-      >
-        <ChevronRight className="w-6 h-6 text-foreground" />
-      </button>
-
-      {/* Dots Indicator */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        {slides.map((_, index) => (
-          <button
+    <section className="relative overflow-hidden rounded-b-3xl">
+      <div className="relative h-[220px] sm:h-[300px] md:h-[420px]">
+        <AnimatePresence mode="wait">
+          <motion.div
             key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              index === currentSlide ? "bg-accent" : "bg-primary-foreground/40"
-            }`}
-          />
-        ))}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.04 }}
+            transition={{ duration: 0.6 }}
+            className={`absolute inset-0 bg-gradient-to-br ${slide.gradient}`}
+          >
+            {/* Overlay */}
+            <div
+              className={`absolute inset-0 ${
+                slide.dark ? "bg-black/40" : "bg-white/10"
+              }`}
+            />
+
+            {/* Content */}
+            <div className="relative h-full flex items-center">
+              <div className="container px-5">
+                <motion.div
+                  initial={{ opacity: 0, y: 25 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="max-w-xl"
+                >
+                  <h1
+                    className={`text-2xl sm:text-4xl md:text-5xl font-extrabold leading-tight ${
+                      slide.dark ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    {slide.title}
+                  </h1>
+
+                  <p
+                    className={`mt-2 text-sm sm:text-lg ${
+                      slide.dark ? "text-white/80" : "text-gray-800"
+                    }`}
+                  >
+                    {slide.subtitle}
+                  </p>
+
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.05 }}
+                    className="
+                      mt-5 inline-flex items-center
+                      px-6 py-3 rounded-full
+                      bg-black text-yellow-400
+                      font-semibold text-sm sm:text-base
+                      shadow-[0_15px_40px_-10px_rgba(0,0,0,0.6)]
+                    "
+                  >
+                    {slide.cta}
+                  </motion.button>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Arrows (hidden on small mobile) */}
+        <button
+          onClick={() => setIndex((index - 1 + slides.length) % slides.length)}
+          className="
+            hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2
+            bg-white/80 p-2 rounded-full shadow
+          "
+        >
+          <ChevronLeft />
+        </button>
+
+        <button
+          onClick={() => setIndex((index + 1) % slides.length)}
+          className="
+            hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2
+            bg-white/80 p-2 rounded-full shadow
+          "
+        >
+          <ChevronRight />
+        </button>
+
+        {/* Dots */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+          {slides.map((_, i) => (
+            <motion.span
+              key={i}
+              animate={{
+                width: i === index ? 18 : 6,
+                opacity: i === index ? 1 : 0.5,
+              }}
+              className="h-2 rounded-full bg-black"
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

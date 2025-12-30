@@ -1,47 +1,76 @@
+import { motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
+
 const banners = [
   {
     title: "TV Upgrade Sale",
-    subtitle: "Smart TVs from ₹12,999",
-    bgColor: "bg-gradient-to-br from-indigo-600 to-purple-700",
-    icon: "📺",
+    subtitle: "From ₹12,999",
+    cta: "Shop Now",
+    gradient: "from-yellow-400 via-yellow-300 to-yellow-500",
+    text: "text-black",
   },
   {
-    title: "Beat the Heat",
-    subtitle: "ACs & Coolers on Sale",
-    bgColor: "bg-gradient-to-br from-cyan-500 to-blue-600",
-    icon: "❄️",
-  },
-  {
-    title: "Kitchen Makeover",
-    subtitle: "Up to 60% Off",
-    bgColor: "bg-gradient-to-br from-orange-500 to-red-600",
-    icon: "🍳",
-  },
-  {
-    title: "Laundry Days",
-    subtitle: "Washing Machines Deal",
-    bgColor: "bg-gradient-to-br from-violet-500 to-fuchsia-600",
-    icon: "🧺",
+    title: "Summer Cooling",
+    subtitle: "ACs & Fans on Sale",
+    cta: "Explore",
+    gradient: "from-gray-900 via-gray-800 to-gray-900",
+    text: "text-white",
   },
 ];
 
 export function PromoBanners() {
   return (
-    <section className="container mt-8">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {banners.map((banner) => (
-          <a
-            key={banner.title}
-            href="#"
-            className={`${banner.bgColor} rounded-lg p-4 md:p-6 text-primary-foreground transition-transform hover:scale-[1.02] shadow-card hover:shadow-card-hover`}
+    <section className="container mt-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {banners.map((b, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.03 }}
+            transition={{ duration: 0.4, delay: i * 0.1 }}
+            viewport={{ once: true }}
+            className={`
+              relative overflow-hidden
+              rounded-2xl p-6
+              bg-gradient-to-br ${b.gradient}
+              shadow-[0_20px_50px_-20px_rgba(0,0,0,0.5)]
+            `}
           >
-            <div className="text-3xl md:text-4xl mb-2">{banner.icon}</div>
-            <h3 className="font-bold text-lg md:text-xl">{banner.title}</h3>
-            <p className="text-sm text-primary-foreground/80">{banner.subtitle}</p>
-            <span className="inline-block mt-2 text-sm font-medium underline underline-offset-2">
-              Shop now →
-            </span>
-          </a>
+            {/* Glow overlay */}
+            <div className="absolute inset-0 bg-white/10 opacity-0 hover:opacity-100 transition-opacity" />
+
+            {/* Content */}
+            <div className={`relative z-10 ${b.text}`}>
+              <h3 className="text-xl font-bold mb-1">
+                {b.title}
+              </h3>
+              <p className="text-sm opacity-90 mb-4">
+                {b.subtitle}
+              </p>
+
+              <button
+                className="
+                  inline-flex items-center gap-2
+                  bg-black/80 text-white
+                  px-4 py-2 rounded-full text-sm font-medium
+                  hover:bg-black transition
+                "
+              >
+                {b.cta}
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Decorative blur */}
+            <div
+              className="
+                absolute -bottom-10 -right-10
+                w-40 h-40 rounded-full
+                bg-white/20 blur-3xl
+              "
+            />
+          </motion.div>
         ))}
       </div>
     </section>
