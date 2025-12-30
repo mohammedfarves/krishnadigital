@@ -3,9 +3,10 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig({
+  base: "./", // ⭐ VERY IMPORTANT FOR NETLIFY
   server: {
-    host: true,        // simpler & standard
-    port: 8080,        // default Vite port
+    host: true,
+    port: 8080,
   },
   plugins: [react()],
   resolve: {
