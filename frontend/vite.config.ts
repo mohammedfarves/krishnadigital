@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig({
-  base: "./", // ⭐ VERY IMPORTANT FOR NETLIFY
+  base: "./", // ⭐ CRITICAL FIX
   server: {
     host: true,
     port: 8080,
